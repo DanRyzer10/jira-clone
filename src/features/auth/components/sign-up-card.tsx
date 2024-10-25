@@ -5,6 +5,13 @@ import { FaGithub } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import { Card,CardContent,CardDescription,CardHeader,CardTitle } from "@/components/ui/card"
 import { DottedSeparator } from "@/components/DottedSeparator";
+import { AlertCircle } from "lucide-react";
+import {
+    Alert,
+    AlertDescription,
+    AlertTitle,
+  } from "@/components/ui/alert"
+
 import { Input } from "@/components/ui/input"
 import { RegisterSchema } from "../schema";
 import {useRegister} from "../api/use-register"
@@ -14,9 +21,11 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import Link from "next/link";
+import { useState } from "react";
 
 export const SignUpCard = ()=>{
     const {mutate}= useRegister();
+    const [registerError,setRegisterError]  = useState(false)
     const form = useForm<z.infer<typeof RegisterSchema>>({
         resolver: zodResolver(RegisterSchema),
         defaultValues: {
@@ -28,14 +37,15 @@ export const SignUpCard = ()=>{
     const onSubmit = (values: z.infer<typeof RegisterSchema>) => {
         mutate({
             json:values
-        })
+        },)
+
     }
     return (
         <Card className="w-full h-full md:w-[487px] border-none  p-5  shadow-none">
             <CardHeader className="flex items-center justify-center text-center p-6">
                 <CardTitle className="text-2xl">Registrate</CardTitle>
                 <CardDescription className="text-sm">
-                    Al Registrarte aceptas  nuestros {""}
+                    Al Registrarte aceptas  nuestros {" "}
                     <Link href="/privacy">
                     <span className="text-blue-700">
                         Términos y Condiciones
@@ -53,6 +63,17 @@ export const SignUpCard = ()=>{
             <div className="mb-2 p-2">
              <DottedSeparator></DottedSeparator>
            </div>
+           {
+            registerError &&  (
+                <Alert variant="destructive" className="mb-2">
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>Error</AlertTitle>
+                    <AlertDescription>
+                       El usuario ya existe, por favor utilice otro correo
+                    </AlertDescription>
+            </Alert>
+            )
+           }
             <CardContent className="">
                 <Form {...form}>
 
@@ -140,7 +161,7 @@ export const SignUpCard = ()=>{
 
             </div>
 
-            <CardContent>
+            <CardContent >
                 <div className="flex justify-center items-center">
                     <p className="text-sm">¿Ya tienes una cuenta?</p>
                     <Link href="/sign-in">
@@ -148,6 +169,7 @@ export const SignUpCard = ()=>{
                     </Link>
                 </div>
             </CardContent>
+            
         </Card>
     )
 }

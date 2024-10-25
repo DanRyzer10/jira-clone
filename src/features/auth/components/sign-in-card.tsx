@@ -15,7 +15,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import Link from "next/link";
 
 export const SignInCard = () => {
-    const {mutate} = useLogin();
+    const {mutate,isPending} = useLogin();
     const form = useForm<z.infer<typeof loginSchema>>({
         resolver: zodResolver(loginSchema),
         defaultValues: {
@@ -44,6 +44,7 @@ export const SignInCard = () => {
                             <FormItem>
                                 <FormControl>
                                     <Input
+                                        disabled={isPending}
                                         type="email"
                                         {...field}
                                         placeholder="Correo electrónico"
@@ -63,6 +64,7 @@ export const SignInCard = () => {
                             <FormItem>
                                 <FormControl>
                                     <Input
+                                      disabled={isPending}
                                         type="password"
                                         {...field}
                                         placeholder="Contraseña"
@@ -87,7 +89,7 @@ export const SignInCard = () => {
                     >  
                     </Input> */}
 
-                        <Button disabled={false} size="lg" className="w-full" >
+                        <Button   disabled={isPending} size="lg" className="w-full" >
                             Iniciar sesión
                         </Button>
 

@@ -3,26 +3,24 @@ import { InferRequestType,InferResponseType } from "hono";
 import {client} from "@/lib/rpc"
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
-type ResponseType = InferResponseType<typeof client.api.auth.login["$post"]>
-type RequestType = InferRequestType<typeof client.api.auth.login["$post"]>
+type ResponseType = InferResponseType<typeof client.api.auth.logout["$post"]>
 
-export const useLogin = ()=>{
+export const useLogout = ()=>{
+    const router = useRouter()
     const queryClient = useQueryClient();
     const {toast} = useToast();
-    const router = useRouter();
     const mutation = useMutation<
         ResponseType,
-        Error,
-        RequestType
+        Error
     >({
         mutationFn:async(data)=>{
-            const response = await client.api.auth.login["$post"](data);
+            const response = await client.api.auth.logout["$post"]();
             return await response.json() as ResponseType;
         },
-        onSuccess:() =>{
+        onSuccess:()=>{
             toast({
-                title:"Inicio de sesion exitoso",
-                description:"Has iniciado sesion con exito",
+                title:"Cierre de sesion exitoso",
+                description:"Has cerrado sesion con exito",
                 variant:"default"
             })
             router.refresh();
@@ -30,8 +28,8 @@ export const useLogin = ()=>{
         },
         onError:()=>{
             toast({
-                title:"Error  al iniciar sesion",
-                description:"Ha ocurrido un error al iniciar sesion",
+                title:"Error  al cerrar sesion",
+                description:"Ha ocurrido un error al cerrar sesion",
                 variant:"destructive"
             })
         }

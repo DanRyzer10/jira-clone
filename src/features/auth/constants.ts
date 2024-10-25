@@ -1,0 +1,1 @@
+export const AUTH_COOKIE = "dann-jira-clone-session-cookie"
