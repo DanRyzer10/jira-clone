@@ -24,7 +24,7 @@ import Link from "next/link";
 import { useState } from "react";
 
 export const SignUpCard = ()=>{
-    const {mutate}= useRegister();
+    const {mutate,isPending}= useRegister();
     const [registerError,setRegisterError]  = useState(false)
     const form = useForm<z.infer<typeof RegisterSchema>>({
         resolver: zodResolver(RegisterSchema),
@@ -82,7 +82,7 @@ export const SignUpCard = ()=>{
                             <FormItem>
                                 <FormControl>
                                     <Input
-                                        type="text"
+                                        type="text" disabled={isPending}
                                         {...field}
                                         placeholder="Ingresa tu nombre"
                                     >
@@ -99,7 +99,7 @@ export const SignUpCard = ()=>{
                             <FormItem>
                                 <FormControl>
                                     <Input
-                                        type="email"
+                                        type="email" disabled={isPending}
                                         {...field}
                                         placeholder="Correo electrónico"
                                     >
@@ -116,12 +116,12 @@ export const SignUpCard = ()=>{
                         <FormField name="password" control={form.control} render={({ field }) => (
                             <FormItem>
                                 <FormControl>
-                                    <Input
+                                    <Input disabled={isPending}
                                         type="password"
                                         {...field}
                                         placeholder="Contraseña"
                                     >
-                                    </Input>
+                                    </Input >
                                 </FormControl>
 
                                 <FormMessage {...form.formState.errors} className=""   ></FormMessage>
@@ -131,7 +131,7 @@ export const SignUpCard = ()=>{
 
                         </FormField>
 
-                    <Button disabled={false} size="lg" className="w-full" >
+                    <Button disabled={isPending} size="lg" className="w-full" >
                         Registrate
                     </Button>
                 </form>

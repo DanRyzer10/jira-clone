@@ -13,12 +13,15 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useCreateWorkspace } from "../api/use-create-workspace";
 import { Avatar, AvatarFallback } from "@radix-ui/react-avatar";
+import { useRouter } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 interface CreateWorkspaceFormProps {
     onCancel?: ()=>void;
 };
 
 export const CreateWorkspaceForm  = ({onCancel}:CreateWorkspaceFormProps) => {
+    const router = useRouter();
     const {mutate,isPending} = useCreateWorkspace();
     const inputRef = useRef<HTMLInputElement>(null);
     const handleImageChange = (e:React.ChangeEvent<HTMLInputElement>)=>{
@@ -41,8 +44,10 @@ export const CreateWorkspaceForm  = ({onCancel}:CreateWorkspaceFormProps) => {
 
         }
         mutate({form:finalValues},{
-            onSuccess:()=>{
+            onSuccess:({data})=>{
                 form.reset();
+                // onCancel?.();
+                router.push(`/workspaces/${data.$id}`)                
             }
         }
         );
@@ -131,7 +136,9 @@ export const CreateWorkspaceForm  = ({onCancel}:CreateWorkspaceFormProps) => {
                         />
                         <DottedSeparator/>
                         <div className="flex items-center justify-between">
-                            <Button disabled={isPending} variant={"secondary"} onClick={onCancel}>Cancelar</Button>
+                            <Button disabled={isPending}
+                                className={cn(!onCancel && "invisible")}
+                            variant={"secondary"} onClick={onCancel}>Cancelar</Button>
                             <Button disabled={isPending} type="submit">Crear espacio de trabajo</Button>
                            
 
